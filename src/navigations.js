@@ -1,19 +1,20 @@
 import React, { Component } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TouchableHighlight,
+  StyleSheet
+} from "react-native";
 import { Platform, StatusBar } from "react-native";
 import {
   StackNavigator,
   TabNavigator,
+  DrawerNavigator,
   SwitchNavigator,
   NavigationActions
 } from "react-navigation";
-import {
-  FontAwesome,
-  SimpleLineIcons,
-  EvilIcons,
-  Ionicons,
-  Entypo
-} from "@expo/vector-icons";
+import { FontAwesome, Foundation, Ionicons, Entypo } from "@expo/vector-icons";
 
 import { colors } from "../src/config/constants";
 import { onSignOut } from "./auth";
@@ -25,13 +26,14 @@ import SignupScreen from "./screens/SignupScreen";
 import SigninScreen from "./screens/SigninScreen";
 import HomeScreen from "./screens/HomeScreen";
 import AuthLoadingScreen from "./screens/AuthLoadingScreen";
+import SideMenu from "./components/SideMenu";
 
 const TAB_ICON_SIZE = 20;
 
 const CrudStack = StackNavigator({
   Crud: {
     screen: CrudScreen,
-    navigationOptions: () => ({
+    navigationOptions: ({ navigation }) => ({
       headerTitle: "APOLLO CRUD",
       headerStyle: {
         backgroundColor: colors.PRIMARY
@@ -39,7 +41,16 @@ const CrudStack = StackNavigator({
       headerTitleStyle: {
         fontWeight: "bold",
         color: colors.SECONDARY
-      }
+      },
+      headerLeft: (
+        <TouchableHighlight onPress={() => navigation.navigate("DrawerOpen")}>
+          <Foundation
+            name="list"
+            size={TAB_ICON_SIZE}
+            style={styles.iconStyle}
+          />
+        </TouchableHighlight>
+      )
     })
   },
   More: {
@@ -60,7 +71,7 @@ const CrudStack = StackNavigator({
 const StateStack = StackNavigator({
   State: {
     screen: StateScreen,
-    navigationOptions: () => ({
+    navigationOptions: ({ navigation }) => ({
       headerTitle: "APOLLO STATE",
       headerStyle: {
         backgroundColor: colors.PRIMARY
@@ -68,7 +79,16 @@ const StateStack = StackNavigator({
       headerTitleStyle: {
         fontWeight: "bold",
         color: colors.SECONDARY
-      }
+      },
+      headerLeft: (
+        <TouchableHighlight onPress={() => navigation.navigate("DrawerOpen")}>
+          <Foundation
+            name="list"
+            size={TAB_ICON_SIZE}
+            style={styles.iconStyle}
+          />
+        </TouchableHighlight>
+      )
     })
   }
 });
@@ -76,7 +96,16 @@ const StateStack = StackNavigator({
 const ContextStack = StackNavigator({
   Context: {
     screen: ContextScreen,
+
     navigationOptions: ({ navigation }) => ({
+      headerTitle: "CONTEXT API",
+      headerStyle: {
+        backgroundColor: colors.WHITE
+      },
+      headerTitleStyle: {
+        fontWeight: "bold",
+        color: colors.PRIMARY
+      },
       headerRight: (
         <View style={{ paddingRight: 15 }}>
           <TouchableOpacity
@@ -87,6 +116,15 @@ const ContextStack = StackNavigator({
             <Ionicons size={TAB_ICON_SIZE} name="md-exit" />
           </TouchableOpacity>
         </View>
+      ),
+      headerLeft: (
+        <TouchableHighlight onPress={() => navigation.navigate("DrawerOpen")}>
+          <Foundation
+            name="list"
+            size={TAB_ICON_SIZE}
+            style={styles.iconStyle}
+          />
+        </TouchableHighlight>
       )
     })
   }
@@ -114,64 +152,103 @@ const HomeStack = StackNavigator({
             <Ionicons size={TAB_ICON_SIZE} name="md-exit" />
           </TouchableOpacity>
         </View>
+      ),
+      headerLeft: (
+        <TouchableHighlight onPress={() => navigation.navigate("DrawerOpen")}>
+          <Foundation
+            name="list"
+            size={TAB_ICON_SIZE}
+            style={styles.iconStyle}
+          />
+        </TouchableHighlight>
       )
     })
   }
 });
 
-const AppStack = TabNavigator(
+const styles = StyleSheet.create({
+  iconStyle: {
+    padding: 10
+  }
+});
+
+// USING TABNAVIGATOR
+// const AppStack = TabNavigator(
+//   {
+//     Crud: {
+//       screen: CrudStack,
+//       navigationOptions: () => ({
+//         tabBarIcon: ({ tintColor }) => (
+//           <Entypo size={TAB_ICON_SIZE} color={tintColor} name="air" />
+//         )
+//       })
+//     },
+//     State: {
+//       screen: StateStack,
+//       navigationOptions: () => ({
+//         tabBarIcon: ({ tintColor }) => (
+//           <FontAwesome size={TAB_ICON_SIZE} color={tintColor} name="search" />
+//         )
+//       })
+//     },
+//     Context: {
+//       screen: ContextStack,
+//       navigationOptions: () => ({
+//         tabBarIcon: ({ tintColor }) => (
+//           <Entypo size={TAB_ICON_SIZE} color={tintColor} name="archive" />
+//         )
+//       })
+//     },
+//     Home: {
+//       screen: HomeStack,
+//       navigationOptions: () => ({
+//         tabBarIcon: ({ tintColor }) => (
+//           <FontAwesome size={TAB_ICON_SIZE} color={tintColor} name="home" />
+//         )
+//       })
+//     }
+//   },
+//   {
+//     lazy: true,
+//     tabBarPosition: "bottom",
+//     swipeEnabled: false,
+//     tabBarOptions: {
+//       showIcon: true,
+//       showLabel: true,
+//       activeTintColor: colors.PRIMARY,
+//       inactiveTintColor: colors.LIGHT_GRAY
+//     },
+//     style: {
+//       backgroundColor: colors.WHITE,
+//       height: 50,
+//       paddingVertical: 5,
+//       paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+//     }
+//   }
+// );
+
+// USING DRAWERNAVIGATOR
+const AppStack = DrawerNavigator(
   {
     Crud: {
-      screen: CrudStack,
-      navigationOptions: () => ({
-        tabBarIcon: ({ tintColor }) => (
-          <Entypo size={TAB_ICON_SIZE} color={tintColor} name="air" />
-        )
-      })
+      screen: CrudStack
     },
     State: {
-      screen: StateStack,
-      navigationOptions: () => ({
-        tabBarIcon: ({ tintColor }) => (
-          <FontAwesome size={TAB_ICON_SIZE} color={tintColor} name="search" />
-        )
-      })
+      screen: StateStack
     },
     Context: {
-      screen: ContextStack,
-      navigationOptions: () => ({
-        tabBarIcon: ({ tintColor }) => (
-          <Entypo size={TAB_ICON_SIZE} color={tintColor} name="archive" />
-        )
-      })
+      screen: ContextStack
     },
     Home: {
-      screen: HomeStack,
-      navigationOptions: () => ({
-        tabBarIcon: ({ tintColor }) => (
-          <FontAwesome size={TAB_ICON_SIZE} color={tintColor} name="home" />
-        )
-      })
+      screen: HomeStack
     }
   },
   {
-    lazy: true,
-    tabBarPosition: "bottom",
-    swipeEnabled: false,
-    tabBarOptions: {
-      showIcon: true,
-      showLabel: true,
-      activeTintColor: colors.PRIMARY,
-      inactiveTintColor: colors.LIGHT_GRAY
-    },
-    style: {
-      backgroundColor: colors.WHITE,
-      height: 50,
-      paddingVertical: 5,
-      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
-    }
+    contentComponent: SideMenu,
+    drawerWidth: 250
   }
 );
+
 const AuthStack = StackNavigator({
   Signup: SignupScreen,
   Signin: SigninScreen
