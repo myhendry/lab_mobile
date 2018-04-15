@@ -7,11 +7,15 @@ import { gql } from "apollo-boost";
 import { CURRENT_GAME } from "../graphql/queries";
 import { UPDATE_GAME, CREATE_SCORE, RESET_GAME } from "../graphql/mutations";
 
-class About extends Component {
+class StateScreen extends Component {
   state = {};
 
   _createScore = async () => {
-    const { createScore, resetGame, data: { currentGame } } = this.props;
+    const {
+      createScore,
+      resetGame,
+      data: { currentGame }
+    } = this.props;
     try {
       await createScore({
         variables: {
@@ -27,7 +31,7 @@ class About extends Component {
   };
 
   render() {
-    // console.log("PROPS ABOUT", this.props);
+    // console.log("PROPS StateScreen", this.props);
     const {
       data: {
         loading,
@@ -126,4 +130,4 @@ export default compose(
   graphql(UPDATE_GAME, { name: "updateGame" }),
   graphql(CREATE_SCORE, { name: "createScore" }),
   graphql(RESET_GAME, { name: "resetGame" })
-)(About);
+)(StateScreen);

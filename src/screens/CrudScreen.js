@@ -13,7 +13,7 @@ import { CardSection, Input, Button } from "../components/common";
 import { GET_TWEETS } from "../graphql/queries";
 import { ADD_TWEET, DELETE_TWEET } from "../graphql/mutations";
 
-class Main extends React.Component {
+class CrudScreen extends React.Component {
   state = {
     text: ""
   };
@@ -100,7 +100,7 @@ class Main extends React.Component {
                     onPress={() => this._deleteTweet(item._id)}
                   />
                 }
-                onPress={() => this.props.navigation.navigate("Details", item)}
+                onPress={() => this.props.navigation.navigate("More", item)}
               />
             )}
             keyExtractor={item => item._id}
@@ -127,4 +127,4 @@ export default compose(
   graphql(ADD_TWEET, { name: "addTweet" }),
   graphql(DELETE_TWEET, { name: "deleteTweet" }),
   graphql(GET_TWEETS)
-)(Main);
+)(CrudScreen);

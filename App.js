@@ -1,10 +1,21 @@
-import React from "react";
+import React, { Component } from "react";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
-import Main from "./src/screens/Main";
-import { Tabs } from "./src/navigations";
 
+import MyProvider from "./src/MyProvider";
+// import { createRootNavigator } from "./src/navigations";
+// import { isSignedIn } from "./src/auth";
+// import { Tabs } from "./src/navigations";
+import Nav from "./src/navigations";
 import { CURRENT_GAME } from "./src/graphql/queries";
+
+// console.disableYellowBox = true;
+console.disableYellowBox = [
+  "Encountered an error loading page", // WebView uri: result.url and url failing to load - "bloomberg suneq" https://github.com/facebook/react-native/issues/7839#issuecomment-224111608
+  "Deprecation warning: moment construction falls back to js Date. This is discouraged and will be removed in upcoming major release. Please refer to http://momentjs.com/guides/#/warnings/js-date/ for more info.",
+  "Task orphaned for request ",
+  "Remote debugger is in a background tab which may cause apps to perform slowly"
+];
 
 const defaultState = {
   currentGame: {
@@ -46,13 +57,45 @@ const client = new ApolloClient({
   }
 });
 
-export default () => {
-  return (
-    <ApolloProvider client={client}>
-      <Tabs />
-    </ApolloProvider>
-  );
-};
+class App extends Component {
+  // state = {
+  //   signedIn: false,
+  //   checkedSignIn: false
+  // };
+
+  // componentDidMount() {
+  //   isSignedIn()
+  //     .then(res => this.setState({ signedIn: res, checkedSignIn: true }))
+  //     .catch(err => alert("An error occurred"));
+  // }
+
+  render() {
+    //   const { checkedSignIn, signedIn } = this.state;
+    //   if (!checkedSignIn) {
+    //     return null;
+    //   }
+
+    //   const Layout = createRootNavigator(signedIn);
+
+    return (
+      <ApolloProvider client={client}>
+        <MyProvider>
+          <Nav />
+        </MyProvider>
+      </ApolloProvider>
+    );
+  }
+}
+
+export default App;
+
+// export default () => {
+//   return (
+//     <ApolloProvider client={client}>
+//       <Tabs />
+//     </ApolloProvider>
+//   );
+// };
 
 // import React from "react";
 // import { ApolloClient, InMemoryCache, HttpLink, split } from "apollo-boost";

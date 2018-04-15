@@ -1,19 +1,38 @@
 import React, { Component } from "react";
-import { StackNavigator, TabNavigator } from "react-navigation";
-import { FontAwesome, SimpleLineIcons, EvilIcons } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity } from "react-native";
+import { Platform, StatusBar } from "react-native";
+import {
+  StackNavigator,
+  TabNavigator,
+  SwitchNavigator,
+  NavigationActions
+} from "react-navigation";
+import {
+  FontAwesome,
+  SimpleLineIcons,
+  EvilIcons,
+  Ionicons,
+  Entypo
+} from "@expo/vector-icons";
 
 import { colors } from "../src/config/constants";
-import Main from "./screens/Main";
-import About from "./screens/About";
-import Details from "./screens/Details";
+import { onSignOut } from "./auth";
+import CrudScreen from "./screens/CrudScreen";
+import StateScreen from "./screens/StateScreen";
+import MoreScreen from "./screens/MoreScreen";
+import ContextScreen from "./screens/ContextScreen";
+import SignupScreen from "./screens/SignupScreen";
+import SigninScreen from "./screens/SigninScreen";
+import HomeScreen from "./screens/HomeScreen";
+import AuthLoadingScreen from "./screens/AuthLoadingScreen";
 
 const TAB_ICON_SIZE = 20;
 
-const HomeStack = StackNavigator({
-  Main: {
-    screen: Main,
+const CrudStack = StackNavigator({
+  Crud: {
+    screen: CrudScreen,
     navigationOptions: () => ({
-      headerTitle: "MAIN",
+      headerTitle: "APOLLO CRUD",
       headerStyle: {
         backgroundColor: colors.PRIMARY
       },
@@ -23,10 +42,10 @@ const HomeStack = StackNavigator({
       }
     })
   },
-  Details: {
-    screen: Details,
+  More: {
+    screen: MoreScreen,
     navigationOptions: () => ({
-      headerTitle: "DETAILS",
+      headerTitle: "MORE",
       headerStyle: {
         backgroundColor: colors.PRIMARY
       },
@@ -38,21 +57,99 @@ const HomeStack = StackNavigator({
   }
 });
 
-export const Tabs = TabNavigator(
+const StateStack = StackNavigator({
+  State: {
+    screen: StateScreen,
+    navigationOptions: () => ({
+      headerTitle: "APOLLO STATE",
+      headerStyle: {
+        backgroundColor: colors.PRIMARY
+      },
+      headerTitleStyle: {
+        fontWeight: "bold",
+        color: colors.SECONDARY
+      }
+    })
+  }
+});
+
+const ContextStack = StackNavigator({
+  Context: {
+    screen: ContextScreen,
+    navigationOptions: ({ navigation }) => ({
+      headerRight: (
+        <View style={{ paddingRight: 15 }}>
+          <TouchableOpacity
+            onPress={() =>
+              onSignOut().then(() => navigation.navigate("SignedOut"))
+            }
+          >
+            <Ionicons size={TAB_ICON_SIZE} name="md-exit" />
+          </TouchableOpacity>
+        </View>
+      )
+    })
+  }
+});
+
+const HomeStack = StackNavigator({
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle: "HOME",
+      headerStyle: {
+        backgroundColor: colors.WHITE
+      },
+      headerTitleStyle: {
+        fontWeight: "bold",
+        color: colors.PRIMARY
+      },
+      headerRight: (
+        <View style={{ paddingRight: 15 }}>
+          <TouchableOpacity
+            onPress={() =>
+              onSignOut().then(() => navigation.navigate("SignedOut"))
+            }
+          >
+            <Ionicons size={TAB_ICON_SIZE} name="md-exit" />
+          </TouchableOpacity>
+        </View>
+      )
+    })
+  }
+});
+
+const AppStack = TabNavigator(
   {
+    Crud: {
+      screen: CrudStack,
+      navigationOptions: () => ({
+        tabBarIcon: ({ tintColor }) => (
+          <Entypo size={TAB_ICON_SIZE} color={tintColor} name="air" />
+        )
+      })
+    },
+    State: {
+      screen: StateStack,
+      navigationOptions: () => ({
+        tabBarIcon: ({ tintColor }) => (
+          <FontAwesome size={TAB_ICON_SIZE} color={tintColor} name="search" />
+        )
+      })
+    },
+    Context: {
+      screen: ContextStack,
+      navigationOptions: () => ({
+        tabBarIcon: ({ tintColor }) => (
+          <Entypo size={TAB_ICON_SIZE} color={tintColor} name="archive" />
+        )
+      })
+    },
     Home: {
       screen: HomeStack,
       navigationOptions: () => ({
         tabBarIcon: ({ tintColor }) => (
           <FontAwesome size={TAB_ICON_SIZE} color={tintColor} name="home" />
-        )
-      })
-    },
-    About: {
-      screen: About,
-      navigationOptions: () => ({
-        tabBarIcon: ({ tintColor }) => (
-          <FontAwesome size={TAB_ICON_SIZE} color={tintColor} name="search" />
         )
       })
     }
@@ -63,14 +160,133 @@ export const Tabs = TabNavigator(
     swipeEnabled: false,
     tabBarOptions: {
       showIcon: true,
-      showLabel: false,
+      showLabel: true,
       activeTintColor: colors.PRIMARY,
-      inactiveTintColor: colors.LIGHT_GRAY,
-      style: {
-        backgroundColor: colors.WHITE,
-        height: 50,
-        paddingVertical: 5
-      }
+      inactiveTintColor: colors.LIGHT_GRAY
+    },
+    style: {
+      backgroundColor: colors.WHITE,
+      height: 50,
+      paddingVertical: 5,
+      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
     }
   }
 );
+const AuthStack = StackNavigator({
+  Signup: SignupScreen,
+  Signin: SigninScreen
+});
+
+export default SwitchNavigator(
+  {
+    AuthLoading: AuthLoadingScreen,
+    App: AppStack,
+    Auth: AuthStack
+  },
+  {
+    initialRouteName: "AuthLoading"
+  }
+);
+
+// const Tabs = TabNavigator(
+//   {
+//     Crud: {
+//       screen: HomeStack,
+//       navigationOptions: () => ({
+//         tabBarIcon: ({ tintColor }) => (
+//           <FontAwesome size={TAB_ICON_SIZE} color={tintColor} name="home" />
+//         )
+//       })
+//     },
+//     State: {
+//       screen: StateStack,
+//       navigationOptions: () => ({
+//         tabBarIcon: ({ tintColor }) => (
+//           <FontAwesome size={TAB_ICON_SIZE} color={tintColor} name="search" />
+//         )
+//       })
+//     },
+//     Context: {
+//       screen: ContextStack,
+//       navigationOptions: () => ({
+//         tabBarIcon: ({ tintColor }) => (
+//           <FontAwesome size={TAB_ICON_SIZE} color={tintColor} name="search" />
+//         )
+//       })
+//     }
+//   },
+//   {
+//     lazy: true,
+//     tabBarPosition: "bottom",
+//     swipeEnabled: false,
+//     tabBarOptions: {
+//       showIcon: true,
+//       showLabel: true,
+//       activeTintColor: colors.PRIMARY,
+//       inactiveTintColor: colors.LIGHT_GRAY,
+//       style: {
+//         backgroundColor: colors.WHITE,
+//         height: 50,
+//         paddingVertical: 5,
+//         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+//       }
+//     }
+//   }
+// );
+
+// const AuthStack2 = StackNavigator({
+//   Signup: {
+//     screen: SignupScreen,
+//     navigationOptions: () => ({
+//       headerTitle: "SIGN UP",
+//       headerStyle: {
+//         backgroundColor: colors.PRIMARY
+//       },
+//       headerTitleStyle: {
+//         fontWeight: "bold",
+//         color: colors.SECONDARY
+//       }
+//     })
+//   },
+//   Signin: {
+//     screen: SigninScreen,
+//     navigationOptions: () => ({
+//       headerTitle: "SIGN IN",
+//       headerStyle: {
+//         backgroundColor: colors.PRIMARY
+//       },
+//       headerTitleStyle: {
+//         fontWeight: "bold",
+//         color: colors.SECONDARY
+//       }
+//     })
+//   }
+// });
+
+// export const ResetToSignedOut = NavigationActions.reset({
+//   index: 0,
+//   key: null,
+//   actions: [NavigationActions.navigate({ routeName: "SignedOut" })]
+// });
+
+// export const ResetToSignedIn = NavigationActions.reset({
+//   index: 0,
+//   key: null,
+//   actions: [NavigationActions.navigate({ routeName: "SignedIn" })]
+// });
+
+// export const createRootNavigator = (signedIn = false) => {
+//   return SwitchNavigator(
+//     {
+//       SignedIn: {
+//         screen: Tabs
+//       },
+//       SignedOut: {
+//         screen: AuthStack
+//       }
+//     },
+//     {
+//       initialRouteName: signedIn ? "SignedIn" : "SignedOut"
+//     }
+//   );
+// };

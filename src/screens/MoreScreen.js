@@ -6,7 +6,7 @@ import faker from "faker";
 
 import { fakeAvatar } from "../config/constants";
 
-class Details extends Component {
+class MoreScreen extends Component {
   state = {};
   render() {
     const profile = this.props.navigation.state.params;
@@ -47,4 +47,4 @@ const styles = {
   }
 };
 
-export default Details;
+export default MoreScreen;

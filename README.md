@@ -1,7 +1,9 @@
 DONE
 Apollo Link State
+Context API
+Switch
 
 TBD
-Switch
+Authentication
 Subscriptions
-Context API
+Optimistic UI
