@@ -24,6 +24,7 @@ import MoreScreen from "./screens/MoreScreen";
 import ContextScreen from "./screens/ContextScreen";
 import SignupScreen from "./screens/SignupScreen";
 import SigninScreen from "./screens/SigninScreen";
+import EmailSigninScreen from "./screens/EmailSigninScreen";
 import HomeScreen from "./screens/HomeScreen";
 import AuthLoadingScreen from "./screens/AuthLoadingScreen";
 import SideMenu from "./components/SideMenu";
@@ -250,8 +251,9 @@ const AppStack = DrawerNavigator(
 );
 
 const AuthStack = StackNavigator({
+  Signin: SigninScreen,
   Signup: SignupScreen,
-  Signin: SigninScreen
+  EmailSignin: EmailSigninScreen
 });
 
 export default SwitchNavigator(

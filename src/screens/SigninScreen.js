@@ -1,6 +1,17 @@
 import React from "react";
-import { View, Text, AsyncStorage, StyleSheet } from "react-native";
-import { FormLabel, FormInput, Button } from "react-native-elements";
+import {
+  View,
+  Text,
+  AsyncStorage,
+  TouchableOpacity,
+  StyleSheet
+} from "react-native";
+import {
+  FormLabel,
+  FormInput,
+  Button,
+  SocialIcon
+} from "react-native-elements";
 
 class SigninScreen extends React.Component {
   static navigationOptions = {
@@ -10,40 +21,45 @@ class SigninScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <FormLabel>EMAIL</FormLabel>
-        <FormInput />
-        <FormLabel>PASSWORD</FormLabel>
-        <FormInput />
         <View style={styles.btnContainer}>
-          <Button
-            title="SIGN IN"
-            buttonStyle={{
-              backgroundColor: "rgba(92, 99,216, 1)",
-              width: 300,
-              height: 45,
-              borderColor: "transparent",
-              borderWidth: 0,
-              borderRadius: 5
+          <SocialIcon
+            title="Sign In With Email"
+            button
+            type="foursquare"
+            onPress={() => {
+              this.props.navigation.navigate("EmailSignin");
             }}
-            onPress={this._signInAsync}
           />
+          <SocialIcon title="Sign In With Facebook" button type="facebook" />
+          <SocialIcon
+            title="Sign In With Google Plus"
+            button
+            type="google-plus-official"
+          />
+        </View>
+        <View style={styles.linkContainer}>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate("Signup")}
+          >
+            <Text>Sign Up Now!</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
   }
-
-  _signInAsync = async () => {
-    await AsyncStorage.setItem("userToken", "abc");
-    this.props.navigation.navigate("App");
-  };
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    justifyContent: "center"
   },
   btnContainer: {
     padding: 15
+  },
+  linkContainer: {
+    padding: 15,
+    alignItems: "center"
   }
 });
 

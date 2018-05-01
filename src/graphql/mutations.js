@@ -1,5 +1,31 @@
 import { gql } from "apollo-boost";
 
+export const SIGN_UP = gql`
+  mutation(
+    $email: String!
+    $password: String!
+    $fullName: String!
+    $username: String
+  ) {
+    signup(
+      email: $email
+      password: $password
+      fullName: $fullName
+      username: $username
+    ) {
+      token
+    }
+  }
+`;
+
+export const LOG_IN = gql`
+  mutation($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+    }
+  }
+`;
+
 export const ADD_TWEET = gql`
   mutation($text: String!) {
     addTweet(text: $text) {

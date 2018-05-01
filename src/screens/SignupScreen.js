@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, AsyncStorage, StyleSheet } from "react-native";
 import { FormInput, FormLabel, Button } from "react-native-elements";
+import { graphql, compose } from "react-apollo";
 
+import { SIGN_UP } from "../graphql/mutations";
 import { onSignIn } from "../auth";
 
 class SignupScreen extends Component {
@@ -9,14 +11,54 @@ class SignupScreen extends Component {
     title: "SIGN UP"
   };
 
-  state = {};
+  _signup = async () => {
+    const { email, password, fullName, username } = this.state;
+    try {
+      const { data } = await this.props.signup({
+        variables: {
+          email,
+          password,
+          fullName,
+          username
+        }
+      });
+      await AsyncStorage.setItem("@token", data.signup.token);
+      this.props.navigation.navigate("App");
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  state = {
+    email: "",
+    password: "",
+    fullName: "",
+    username: ""
+  };
+
   render() {
     return (
       <View>
+        <FormLabel>FULL NAME</FormLabel>
+        <FormInput
+          onChangeText={fullName => this.setState({ fullName })}
+          value={this.state.fullName}
+        />
+        <FormLabel>USERNAME</FormLabel>
+        <FormInput
+          onChangeText={username => this.setState({ username })}
+          value={this.state.username}
+        />
         <FormLabel>EMAIL</FormLabel>
-        <FormInput />
+        <FormInput
+          onChangeText={email => this.setState({ email })}
+          value={this.state.email}
+        />
         <FormLabel>PASSWORD</FormLabel>
-        <FormInput />
+        <FormInput
+          onChangeText={password => this.setState({ password })}
+          value={this.state.password}
+        />
         <View style={styles.btnContainer}>
           <Button
             title="SIGN UP"
@@ -28,25 +70,7 @@ class SignupScreen extends Component {
               borderWidth: 0,
               borderRadius: 5
             }}
-            onPress={() => {
-              onSignIn().then(() => this.props.navigation.navigate("SignedIn"));
-            }}
-          />
-        </View>
-        <View style={styles.btnContainer}>
-          <Button
-            title="GO TO SIGN IN"
-            titleStyle={{ fontWeight: "700" }}
-            buttonStyle={{
-              backgroundColor: "rgba(92, 99,216, 1)",
-              width: 300,
-              height: 45,
-              borderColor: "transparent",
-              borderWidth: 0,
-              borderRadius: 5
-            }}
-            containerStyle={{ marginTop: 20 }}
-            onPress={() => this.props.navigation.navigate("Signin")}
+            onPress={this._signup}
           />
         </View>
       </View>
@@ -60,4 +84,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SignupScreen;
+export default compose(graphql(SIGN_UP, { name: "signup" }))(SignupScreen);
