@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { AsyncStorage } from "react-native";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 
@@ -24,17 +25,40 @@ const defaultState = {
     teamBScore: 0,
     teamAName: "Team A",
     teamBName: "Team B"
+  },
+  me: {
+    __typename: "me",
+    _id: "",
+    email: "",
+    firstName: "",
+    lastName: ""
   }
 };
 
 const client = new ApolloClient({
   // uri: "https://gqltoy.herokuapp.com/graphql",
   uri: "http://localhost:5000/graphql",
+  request: async operation => {
+    const token = await AsyncStorage.getItem("@token");
+    operation.setContext({
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    });
+  },
   clientState: {
     defaults: defaultState,
     resolvers: {
-      Query: {},
+      Query: {
+        getMeInfo: (_, d, { cache }) => {
+          return defaultState.me;
+        }
+      },
       Mutation: {
+        updateMeInfo: (_, { _id, email, firstName, lastName }, { cache }) => {
+          // TO BE CONTINUED
+          console.log("CACHE", cache);
+        },
         resetCurrentGame: (_, d, { cache }) => {
           cache.writeData({ data: defaultState });
           return defaultState.currentGame;
@@ -57,6 +81,37 @@ const client = new ApolloClient({
     }
   }
 });
+
+// const client = new ApolloClient({
+//   // uri: "https://gqltoy.herokuapp.com/graphql",
+//   uri: "http://localhost:5000/graphql",
+//   clientState: {
+//     defaults: defaultState,
+//     resolvers: {
+//       Query: {},
+//       Mutation: {
+//         resetCurrentGame: (_, d, { cache }) => {
+//           cache.writeData({ data: defaultState });
+//           return defaultState.currentGame;
+//         },
+//         updateGame: (_, { index, value }, { cache }) => {
+//           const prevState = cache.readQuery({ query: CURRENT_GAME });
+//           const data = {
+//             currentGame: {
+//               ...prevState.currentGame,
+//               [index]: value
+//             }
+//           };
+//           cache.writeData({
+//             query: CURRENT_GAME,
+//             data
+//           });
+//           return data.currentGame;
+//         }
+//       }
+//     }
+//   }
+// });
 
 class App extends Component {
   // state = {

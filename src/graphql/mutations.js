@@ -45,17 +45,6 @@ export const DELETE_TWEET = gql`
   }
 `;
 
-export const UPDATE_GAME = gql`
-  mutation($index: String!, $value: String!) {
-    updateGame(index: $index, value: $value) @client {
-      teamAName
-      teamBName
-      teamAScore
-      teamBScore
-    }
-  }
-`;
-
 export const CREATE_SCORE = gql`
   mutation(
     $teamAName: String!
@@ -69,6 +58,17 @@ export const CREATE_SCORE = gql`
       teamAScore: $teamAScore
       teamBScore: $teamBScore
     ) {
+      teamAName
+      teamBName
+      teamAScore
+      teamBScore
+    }
+  }
+`;
+
+export const UPDATE_GAME = gql`
+  mutation($index: String!, $value: String!) {
+    updateGame(index: $index, value: $value) @client {
       teamAName
       teamBName
       teamAScore

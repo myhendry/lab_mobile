@@ -7,10 +7,10 @@ import {
   ActivityIndicator
 } from "react-native";
 import { ListItem, Icon } from "react-native-elements";
-import { graphql, compose } from "react-apollo";
+import { graphql, compose, withApollo } from "react-apollo";
 
 import { CardSection, Input, Button } from "../components/common";
-import { GET_TWEETS } from "../graphql/queries";
+import { ME_QUERY, GET_TWEETS, GET_ME_INFO } from "../graphql/queries";
 import { ADD_TWEET, DELETE_TWEET } from "../graphql/mutations";
 
 class CrudScreen extends React.Component {
@@ -19,8 +19,16 @@ class CrudScreen extends React.Component {
   };
 
   componentDidMount() {
-    // console.log("THIS PROPS", this.props);
+    console.log("THIS PROPS", this.props);
+    this._getUserInfo();
   }
+
+  _getUserInfo = async () => {
+    const {
+      data: { me }
+    } = await this.props.client.query({ query: ME_QUERY });
+    console.log("USER", me);
+  };
 
   _textChange = text => this.setState({ text });
 
@@ -62,7 +70,10 @@ class CrudScreen extends React.Component {
   };
 
   render() {
-    const { data } = this.props;
+    const {
+      data,
+      me: { getMeInfo }
+    } = this.props;
 
     if (data.loading) {
       return (
@@ -123,8 +134,11 @@ const styles = StyleSheet.create({
   }
 });
 
-export default compose(
-  graphql(ADD_TWEET, { name: "addTweet" }),
-  graphql(DELETE_TWEET, { name: "deleteTweet" }),
-  graphql(GET_TWEETS)
-)(CrudScreen);
+export default withApollo(
+  compose(
+    graphql(ADD_TWEET, { name: "addTweet" }),
+    graphql(DELETE_TWEET, { name: "deleteTweet" }),
+    graphql(GET_TWEETS),
+    graphql(GET_ME_INFO, { name: "me" })
+  )(CrudScreen)
+);
