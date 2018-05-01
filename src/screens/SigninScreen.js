@@ -1,15 +1,33 @@
 import React from "react";
-import { View, Text, Button, AsyncStorage, StyleSheet } from "react-native";
+import { View, Text, AsyncStorage, StyleSheet } from "react-native";
+import { FormLabel, FormInput, Button } from "react-native-elements";
 
 class SigninScreen extends React.Component {
   static navigationOptions = {
-    title: "Please sign in"
+    title: "SIGN IN"
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <Button title="Sign in!" onPress={this._signInAsync} />
+        <FormLabel>EMAIL</FormLabel>
+        <FormInput />
+        <FormLabel>PASSWORD</FormLabel>
+        <FormInput />
+        <View style={styles.btnContainer}>
+          <Button
+            title="SIGN IN"
+            buttonStyle={{
+              backgroundColor: "rgba(92, 99,216, 1)",
+              width: 300,
+              height: 45,
+              borderColor: "transparent",
+              borderWidth: 0,
+              borderRadius: 5
+            }}
+            onPress={this._signInAsync}
+          />
+        </View>
       </View>
     );
   }
@@ -23,6 +41,9 @@ class SigninScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  btnContainer: {
+    padding: 15
   }
 });
 

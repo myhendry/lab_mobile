@@ -1,14 +1,22 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Button } from "react-native-elements";
+import { FormInput, FormLabel, Button } from "react-native-elements";
 
 import { onSignIn } from "../auth";
 
 class SignupScreen extends Component {
+  static navigationOptions = {
+    title: "SIGN UP"
+  };
+
   state = {};
   render() {
     return (
       <View>
+        <FormLabel>EMAIL</FormLabel>
+        <FormInput />
+        <FormLabel>PASSWORD</FormLabel>
+        <FormInput />
         <View style={styles.btnContainer}>
           <Button
             title="SIGN UP"
