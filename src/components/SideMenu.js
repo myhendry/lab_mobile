@@ -1,6 +1,6 @@
 import React, { Component } from "react";
+import { View, AsyncStorage, Text, StyleSheet } from "react-native";
 import { NavigationActions } from "react-navigation";
-import { View, Text, StyleSheet } from "react-native";
 
 import { colors } from "../config/constants";
 
@@ -10,6 +10,11 @@ class SideMenu extends Component {
       routeName: route
     });
     this.props.navigation.dispatch(navigateAction);
+  };
+
+  _signOutAsync = async () => {
+    await AsyncStorage.clear();
+    this.props.navigation.navigate("Auth");
   };
 
   render() {
@@ -35,6 +40,9 @@ class SideMenu extends Component {
         <View style={styles.lowerContainer}>
           <Text style={styles.menuItem} onPress={this.navigateToScreen("Home")}>
             Home
+          </Text>
+          <Text style={styles.menuItem} onPress={this._signOutAsync}>
+            Log Out
           </Text>
         </View>
       </View>

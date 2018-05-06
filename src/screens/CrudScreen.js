@@ -19,8 +19,8 @@ class CrudScreen extends React.Component {
   };
 
   componentDidMount() {
-    console.log("THIS PROPS", this.props);
-    this._getUserInfo();
+    // console.log("THIS PROPS", this.props);
+    // this._getUserInfo();
   }
 
   _getUserInfo = async () => {

@@ -5,10 +5,16 @@ import { graphql, compose } from "react-apollo";
 
 import { SIGN_UP } from "../graphql/mutations";
 import { onSignIn } from "../auth";
-
 class SignupScreen extends Component {
   static navigationOptions = {
     title: "SIGN UP"
+  };
+
+  state = {
+    email: "",
+    password: "",
+    fullName: "",
+    username: ""
   };
 
   _signup = async () => {
@@ -22,18 +28,12 @@ class SignupScreen extends Component {
           username
         }
       });
+      // console.log("DATA", data.signup.token);
       await AsyncStorage.setItem("@token", data.signup.token);
       this.props.navigation.navigate("App");
     } catch (error) {
       throw error;
     }
-  };
-
-  state = {
-    email: "",
-    password: "",
-    fullName: "",
-    username: ""
   };
 
   render() {
@@ -46,16 +46,20 @@ class SignupScreen extends Component {
         />
         <FormLabel>USERNAME</FormLabel>
         <FormInput
+          autoCapitalize="none"
           onChangeText={username => this.setState({ username })}
           value={this.state.username}
         />
         <FormLabel>EMAIL</FormLabel>
         <FormInput
+          autoCapitalize="none"
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
         />
         <FormLabel>PASSWORD</FormLabel>
         <FormInput
+          autoCapitalize="none"
+          secureTextEntry
           onChangeText={password => this.setState({ password })}
           value={this.state.password}
         />

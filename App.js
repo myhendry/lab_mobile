@@ -4,9 +4,6 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 
 import MyProvider from "./src/MyProvider";
-// import { createRootNavigator } from "./src/navigations";
-// import { isSignedIn } from "./src/auth";
-// import { Tabs } from "./src/navigations";
 import Nav from "./src/navigations";
 import { CURRENT_GAME } from "./src/graphql/queries";
 
@@ -37,6 +34,7 @@ const defaultState = {
 
 const client = new ApolloClient({
   // uri: "https://gqltoy.herokuapp.com/graphql",
+  // uri: "http://127.0.0.1:5000/graphql",
   uri: "http://localhost:5000/graphql",
   request: async operation => {
     const token = await AsyncStorage.getItem("@token");
@@ -46,93 +44,51 @@ const client = new ApolloClient({
       }
     });
   },
-  clientState: {
-    defaults: defaultState,
-    resolvers: {
-      Query: {
-        getMeInfo: (_, d, { cache }) => {
-          return defaultState.me;
-        }
-      },
-      Mutation: {
-        updateMeInfo: (_, { _id, email, firstName, lastName }, { cache }) => {
-          // TO BE CONTINUED
-          console.log("CACHE", cache);
-        },
-        resetCurrentGame: (_, d, { cache }) => {
-          cache.writeData({ data: defaultState });
-          return defaultState.currentGame;
-        },
-        updateGame: (_, { index, value }, { cache }) => {
-          const prevState = cache.readQuery({ query: CURRENT_GAME });
-          const data = {
-            currentGame: {
-              ...prevState.currentGame,
-              [index]: value
-            }
-          };
-          cache.writeData({
-            query: CURRENT_GAME,
-            data
-          });
-          return data.currentGame;
-        }
-      }
+  // clientState: {
+  //   defaults: defaultState,
+  //   resolvers: {
+  //     Query: {
+  //       getMeInfo: (_, d, { cache }) => {
+  //         return defaultState.me;
+  //       }
+  //     },
+  //     Mutation: {
+  //       updateMeInfo: (_, { _id, email, firstName, lastName }, { cache }) => {
+  //         // KIV
+  //         console.log("CACHE", cache);
+  //       },
+  //       resetCurrentGame: (_, d, { cache }) => {
+  //         cache.writeData({ data: defaultState });
+  //         return defaultState.currentGame;
+  //       },
+  //       updateGame: (_, { index, value }, { cache }) => {
+  //         const prevState = cache.readQuery({ query: CURRENT_GAME });
+  //         const data = {
+  //           currentGame: {
+  //             ...prevState.currentGame,
+  //             [index]: value
+  //           }
+  //         };
+  //         cache.writeData({
+  //           query: CURRENT_GAME,
+  //           data
+  //         });
+  //         return data.currentGame;
+  //       }
+  //     }
+  //   }
+  // },
+  onError: ({ graphQLErrors, networkError }) => {
+    if (graphQLErrors) {
+      console.log("GraphQL Error: ", graphQLErrors);
+    }
+    if (networkError) {
+      console.log("Network Error: ", networkError);
     }
   }
 });
-
-// const client = new ApolloClient({
-//   // uri: "https://gqltoy.herokuapp.com/graphql",
-//   uri: "http://localhost:5000/graphql",
-//   clientState: {
-//     defaults: defaultState,
-//     resolvers: {
-//       Query: {},
-//       Mutation: {
-//         resetCurrentGame: (_, d, { cache }) => {
-//           cache.writeData({ data: defaultState });
-//           return defaultState.currentGame;
-//         },
-//         updateGame: (_, { index, value }, { cache }) => {
-//           const prevState = cache.readQuery({ query: CURRENT_GAME });
-//           const data = {
-//             currentGame: {
-//               ...prevState.currentGame,
-//               [index]: value
-//             }
-//           };
-//           cache.writeData({
-//             query: CURRENT_GAME,
-//             data
-//           });
-//           return data.currentGame;
-//         }
-//       }
-//     }
-//   }
-// });
-
 class App extends Component {
-  // state = {
-  //   signedIn: false,
-  //   checkedSignIn: false
-  // };
-
-  // componentDidMount() {
-  //   isSignedIn()
-  //     .then(res => this.setState({ signedIn: res, checkedSignIn: true }))
-  //     .catch(err => alert("An error occurred"));
-  // }
-
   render() {
-    //   const { checkedSignIn, signedIn } = this.state;
-    //   if (!checkedSignIn) {
-    //     return null;
-    //   }
-
-    //   const Layout = createRootNavigator(signedIn);
-
     return (
       <ApolloProvider client={client}>
         <MyProvider>
@@ -144,45 +100,3 @@ class App extends Component {
 }
 
 export default App;
-
-// export default () => {
-//   return (
-//     <ApolloProvider client={client}>
-//       <Tabs />
-//     </ApolloProvider>
-//   );
-// };
-
-// import React from "react";
-// import { ApolloClient, InMemoryCache, HttpLink, split } from "apollo-boost";
-// import { ApolloProvider } from "react-apollo";
-// import { WebSocketLink } from "apollo-link-ws";
-// import { getMainDefinition } from "apollo-utilities";
-
-// import Main from "./src/screens/Main";
-
-// const httpLink = new HttpLink({
-//   uri: "http://localhost:5000/graphql"
-// });
-
-// const wsLink = new WebSocketLink({
-//   uri: `ws://localhost:5000/`,
-//   options: {
-//     reconnect: true
-//   }
-// });
-
-// // To modify
-// const link = () => {
-//   wsLink, httpLink;
-// };
-
-// const client = new ApolloClient({ link, cache: new InMemoryCache() });
-
-// export default () => {
-//   return (
-//     <ApolloProvider client={client}>
-//       <Main />
-//     </ApolloProvider>
-//   );
-// };

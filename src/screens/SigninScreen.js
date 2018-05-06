@@ -13,9 +13,15 @@ import {
   SocialIcon
 } from "react-native-elements";
 
+import { onSignIn } from "../auth";
 class SigninScreen extends React.Component {
   static navigationOptions = {
     title: "SIGN IN"
+  };
+
+  _signInAsync = async () => {
+    await AsyncStorage.setItem("userToken", "abc");
+    this.props.navigation.navigate("App");
   };
 
   render() {
@@ -30,7 +36,12 @@ class SigninScreen extends React.Component {
               this.props.navigation.navigate("EmailSignin");
             }}
           />
-          <SocialIcon title="Sign In With Facebook" button type="facebook" />
+          <SocialIcon
+            title="Sign In With Facebook"
+            button
+            type="facebook"
+            onPress={this._signInAsync}
+          />
           <SocialIcon
             title="Sign In With Google Plus"
             button

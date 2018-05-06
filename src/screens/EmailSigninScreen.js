@@ -37,16 +37,24 @@ class EmailSigninScreen extends Component {
     }
   };
 
+  _signInAsync = async () => {
+    await AsyncStorage.setItem("userToken", "abc");
+    this.props.navigation.navigate("App");
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <FormLabel>EMAIL</FormLabel>
         <FormInput
+          autoCapitalize="none"
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
         />
         <FormLabel>PASSWORD</FormLabel>
         <FormInput
+          autoCapitalize="none"
+          secureTextEntry
           onChangeText={password => this.setState({ password })}
           value={this.state.password}
         />
@@ -66,7 +74,7 @@ class EmailSigninScreen extends Component {
         </View>
         <View style={styles.btnContainer}>
           <Button
-            title="SIGN IN"
+            title="LOGGED IN"
             buttonStyle={{
               backgroundColor: "rgba(92, 99,216, 1)",
               width: 300,
@@ -81,11 +89,6 @@ class EmailSigninScreen extends Component {
       </View>
     );
   }
-
-  _signInAsync = async () => {
-    await AsyncStorage.setItem("userToken", "abc");
-    this.props.navigation.navigate("App");
-  };
 }
 
 const styles = StyleSheet.create({
